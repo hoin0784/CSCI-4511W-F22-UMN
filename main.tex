@@ -1,0 +1,511 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{hyperref} \hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+}
+
+% Set highlighting for source code
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{bg}{rgb}{0.97,0.97,0.97}
+\lstdefinestyle{code} {
+  backgroundcolor=\color{bg},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{indentfirst}
+
+\lstset{style=code}
+
+\title{%
+    CSCI4511W Final Project\\
+    \large Genetic Algorithms for Solving TSP problems}
+\author{Hoin Jang \\ jang0064@umn.edu \\ University of Minnesota}
+\date{\today}
+
+
+\setcounter{topnumber}{10}               %% default 2
+\setcounter{bottomnumber}{10}            %% default 1
+\setcounter{totalnumber}{10}             %% default 3
+\renewcommand{\topfraction}{1}           %% default .7
+\renewcommand{\bottomfraction}{1}        %% default 0.3
+\renewcommand{\textfraction}{0}          %% default .2
+\renewcommand{\floatpagefraction}{0.8}    %% default .5
+
+\begin{document}
+
+\maketitle
+
+\section*{Abstract}
+
+According to \cite{moschovakis2001algorithm}, an algorithm is usually identified as an abstract machine,
+a mathematical model of a computer. In other words, computer algorithms are standard procedures that help solve computational problems. The development and use of algorithms are important in all areas of computer science, including databases, artificial intelligence, networking, graphics, operating systems, and security. Different types of algorithms exist that are used to solve different computational problems. Examples of modern-day algorithms are Sort algorithms, Search algorithms, hashing, dynamic programming, exponential by squaring, parsing and string matching, and primality testing algorithms.\\
+
+Genetic algorithms are based on the genetics of nature, specifically Darwin's theory of natural selection. Genetic algorithms are exploratory methods that seek optimal solutions by mimicking the evolution of organisms that adapt to their environment. The advantage of genetic algorithms is that there are no constraints on the search space, such as adjacency, differentiability, or unity. That is, convergence toward the global solution is possible even in a very large and complex space without prior knowledge of the search space other than the objective function. Because of these characteristics, genetic algorithms are gaining acceptance to solve many complex optimization problems in the real world. Genetic algorithms are very useful because they can theoretically find a global optimum and can be applied to problems that are not clearly defined mathematically. Although the term algorithm is usually used for genetic algorithms, genetic algorithms are more of a methodology for solving optimization problems than algorithms that solve specific problems.
+
+\section*{Problem Overview}\\One of the problems that can be solved by genetic algorithms is the TSP(Traveling Salesman Problem). TSP is the problem of finding the shortest path from each city to every city given a distance, and the computation time increases exponentially with the number of cities\cite{razali2011genetic}. Among many studies to obtain an optimal approximate solution within a reasonable time, a genetic algorithm is a search and optimization technique based on the principles of natural selection and the evolution of natural chromosomes. Many genetic crossover operators have been proposed to solve TSP, and there are also many successful experimental examples. \\
+
+The genetic algorithm is to handle the ability of adaptation in the environment of organisms by engineering modeling of the genetic and evolutionary mechanisms of organisms in the natural world, based on the principle of natural selection proposed by John Holland in the early 1970s optimization method. In other words, a genetic algorithm is a computational model based on evolutionary phenomena in the natural world. Possible solutions to the problem to be solved are expressed in a data structure of a fixed form, and then gradually transformed to create better solutions. Genetic algorithms are popular solution methods often used to optimize solutions for problems in many fields such as engineering, computer science, economic management, and supply chain management. Genetic algorithms are not only quality measures, but they also have the flexibility to define constraints, the ability to use both continuous and discrete variables, the ability to process large search spaces, the processing time by applying multiple optimal/superior solutions, and parallel computing techniques has great potential to shorten\cite{dao2017bibliometric}.\\
+
+A basic genetic algorithm is generally composed of two processes. The first process is a selection of individuals to produce the next generation and the second process is a manipulation of the selected individuals to form the next generation by crossover and mutation techniques\cite{razali2011genetic}. These processes were no different from the normal biology of genetics as we know it, but what fascinated me was that they gave a complete picture of the optimal solution to the problem to be solved, not the person as the generation evolved. It is literally used in many engineering fields in problems where genetic algorithms are used, but I wanted to get the optimal solution of TSP through a genetic algorithm.\\
+
+TSP is a classic example of a combinatorial optimization problem. The problem is to find the minimum-cost order of travel that visits all cities only once and returns to the original starting point, given the cost of traveling from one city to another. The genetics algorithm is representative, and the genetics algorithm produces efficient results that can save salespeople time and money. The genetic algorithm used generally finds the optimal solution through three genetic manipulation processes: selection, crossover, and mutation. And during mutation manipulation, each array randomly changes its own code to form a self-existing group\cite{razali2011genetic}. The array contained in the generated child group is applied to the fitness function to find the optimal solution we are looking for.\\
+
+I thought it would be a good way to utilize time complexity, one of the most important parts of algorithms, in real life, so I decided to apply the genetics algorithm to the problem of TSP. Through this project, we can obtain a powerful method to solve the most optimal solution of the TSP problem using the three types of genetic manipulation processes of selection, crossover, and mutation of the genetic algorithm, and understand the process of genetic mutation as generations pass. With this project, I want to answer the basic questions of why genetic algorithms are useful for TSP tasks and why they are practical, and why TSP. And based on the code and results, I tried to prove it using TSP, a genetics algorithm. This report demonstrates optimal TSP by finding optimal ways to resolve TSP and increase gene production.
+
+\section*{Related Work} 
+\textbf{Different methods of solving the Traveling Salesman Problem and specific details about Genetic algorithm}\\
+
+There are different ways and algorisms to solve the traveling salesman problem. The methods are the Brute force approach, The branch, and bound method, The nearest neighbor method, The zero-suffix method, and the multi-agent method. Solving the TSP using the brute-force method is one of the easiest ways to solve the problem\cite{helsgaun2000effective}. The method is also known as the naive approach. A programmer normally compares and calculates all the permutations, paths, or routes to determine the shortest path possible\cite{wise2018gis}. Solving the TSP problem using the brute force method involves the programmer drawing all the routes, calculating the distance between all the routes, and finding the optimum one that is the shortest\cite{wise2018gis}. \\
+
+The second algorithm to solve the traveling salesman problem is the nearest neighbor method. It’s a simple traveling salesman heuristic. The Nearest method algorithm works by visiting the closest destination and returning to the first city/destination once all the others are visited\cite{henning2013graph}. After visiting all the cities, the programmer returns to the first city. The branch and bound method are the third algorithms to help solve the traveling salesman problem. The method is straightforward as the problem is broken into a few subsets or subproblems\cite{henning2013graph}. The method involves solving a series of sub-problems whereby the solution of one subproblem affects the other series of subproblems\cite{hong2006management}. \\
+
+And last, the genetic algorithm is another efficient way of solving the traveling salesman problem. Genetic algorithms are search algorithms that are inspired by the evolution of life
+The genetic algorithm natural selection process consists of 5 steps. Here are the steps: Creating an initial population, calculating fitness, selecting the best gene (selecting individuals to produce the next generation), crossing over, and finally mutating to introduce mutations (manipulating with mutagenesis techniques to form the next generation). According to to\cite{braun1990solving}, When solving the traveling salesman problem, cities are classified as genes. And TSPs with genetic algorithms start by providing important information such as city location, the maximum number of generations, crossover probability, and mutation probability.\\
+
+The different selection strategies used in the genetic algorithm process have vastly different effects on the algorithm’s performance. John Gerahy,et al~\cite{moschovakis2001algorithm} said that it is important to find a balance between the next generation by finding a compromise solution to reduce the search area by discarding bad solutions in the object selection during the first process. These choices also influence the use of different selection strategies to solve the TSP problem. The initial population determines repeats, crossover realizes the composition of progeny, and there is literature\cite{deng2015improved} on the effects of crossover and mutations. \\
+
+Tournament selection is probably the most popular selection method in genetic algorithms due to its efficiency and simple implementation\cite{goldberg1991comparative}. In tournament selection, n individuals are selected randomly from the larger population, and the selected individuals compete against each other. The individual with the highest fitness wins and will be included as one of the next-generation population. The number of individuals competing in each tournament is referred to as tournament size, commonly set to 2 (also called binary tournament). Tournament selection also gives a chance to all individuals to be selected and thus it preserves diversity, although keeping diversity may degrade the convergence speed. The tournament selection has several advantages which include efficient time complexity, especially if implemented in parallel, low susceptibility to takeover by dominant individuals, and no requirement for fitness scaling or sorting\cite{goldberg1991comparative}\cite{zitzler1998evolutionary}. \\
+
+Many methods have been developed for solving TSP, including exact algorithms and approximate algorithms. The exact algorithms are carried out to find the optimal solution from all valid solutions in several steps. However, according to \cite{helsgaun2000effective}, when the size of the TSP becomes large(e.g., 100 cities with approximately different solutions) due to exponential complexity, the optimal solution is not always feasible from the valid solutions that can be produced by genetics. In contrast, approximation algorithms, especially many bioinspired algorithms can achieve accepted solutions for many NP-hard problems with relatively short running times\cite{huang2015proposed}. Although this approach is very simple and efficient, it is not suitable for large TSPs due to the computational cost of distance.
+
+\section*{Approach}
+\textbf{1. Approach Overview} \\
+
+First, possible solutions to the problem to be solved are expressed in a data structure of a fixed form, and then better and better solutions are produced by gradually transforming them (the data structure representing the solutions here is a gene). Finally, by transforming them, more and more the process of producing good years can be expressed as evolution. In other words, a genetic algorithm can be said to be a search algorithm that mimics evolution to find a solution x that optimizes some unknown function Y = f(x). Since the genetic algorithm is closer to an approach to solving a problem than an algorithm to solve a specific problem, it can be applied to all problems that can be expressed in a form usable by a genetic algorithm. In other words, if the TSP problem is too complicated to be calculated, it can be approached through a genetic algorithm to obtain an answer close to the optimal solution even though the actual optimal solution cannot be obtained. In this case, it does not show better performance than the algorithm optimized for solving the problem, but it can show an acceptable level of solution in most cases.\\
+
+\textbf{2. Requirement} \\
+
+As a requirement of the genetic algorithm, the solution must be able to be expressed in the form of a gene, and how appropriate this solution can be calculated through a fitness function (a function for evaluating how appropriate the solution is as an answer to a problem). Just as the characteristics of a general organism are represented by genes, a set of genomes, genetic algorithms display the characteristics of solutions through data structures such as arrays of numbers or strings. \\
+
+\textbf{3. Flow} \\
+
+New solutions can be created from existing solutions by combining the genes of some solutions with each other. This combinatorial operation can be likened to a crossover. If superior solutions are selected and crossed, the resulting solutions are more likely to inherit the characteristics of superior solutions. The fitness function defined above can be used to select an excellent solution, and if the probability of selecting a solution with high fitness is increased, the probability that a solution with a better gene will pass on its genes to the next generation increases, and therefore the next generation The solutions of are gradually closer to the optimal solution. In addition, even if crossbreeding leaves no offspring, mutations can form new genes and pass them on to the next generation. For a genetic algorithm to find a global optimum, it needs to go through many generations while maintaining a large population. \\
+
+\textbf{4. Calculation} \\
+
+The genetic algorithm consists of several main operations: 1. Selection, 2. Intersection, 3. Mutation, and 4. Substitution. \\
+
+\textbf{5. Choose} \\
+
+Next, we select years that are candidate years for passing from one generation to the next. Depending on which method is used, the speed of approaching the optimal solution may be slow, or it may fall into the local optimal solution. Therefore, ranking-based selection (i.e., the distance between each city) rank-based selection is generally used, which gives a high probability of being selected in the order of the best solution. \\
+
+\textbf{6. Intersection} \\
+
+Organisms breed within generations to create the next generation. In the TSP problem, a generation represents a number, and as the number increases, the naturally selected solutions in the genetic algorithm calculate and optimize the optimal solution (distance) of the next generation through the crossover. The solution generated through this receives genetic factors at non-overlapping positions through the intersection operation of each parent solution and constructs a new gene.\\
+
+\textbf{7. Mutation}\\
+
+In normal life, not only the crossover of genes but also the probability of surviving in each environment by directly causing mutations in one gene. If the distance calculation of the TSP problem is the same for the next generation (number), it is placed as it is, and the operation is performed with a slight probability to prevent the case that all generations fall into the local optimum solution together.\\
+
+\textbf{8. Conforntation}\\
+
+It is an operation that adds a new solution created through crossover, mutation, etc. to the population, and identifies and excludes inferior ones among the existing ones.\\
+In the end, if the gene type is defined for the TSP problem, the population is initialized randomly, and the fitness of the chromosome is determined. Then, the parent is selected, and the crossover and mutation are put into the GA class function and executed.
+
+\section*{Experiment Design and Results}\\ 
+    \begin{center}
+        \textit{Note: The full code can be found in the appendix below.}\\
+    \end{center}
+First, import cv2 was done to represent TSP through the genetics algorithm, and the city class was designed. City class means each city, and each city’s x-coordinate, y-coordinate is set. To make the possible to indicate the distance between cities through def distanceTo(self,city), a key function inside the city class. \\
+
+Next is the Tour class, the Tour class is a class that contains a route that connects all cities, which means a Tour route after all. Inside the Tour class, there is a def getFiness(self) function. What it does is that due to shortening the distance, the higher the score should be, which means fitness is inversely proportional to distance and the equation is organized in this function. And the getDistance(self) function is put inside the Tour class to calculate the total distance of the tour.\\
+
+After that, there is a Population class, which means a set of travel routes, a collection of tours. If the fitness is high, then mutate and cross over after that to make the better population.\\
+
+The most important class in the code is the GA class, which is the genetic algorithm class. In this class, there are an evolving process, performance process, and mutation process(function’s names: evolvePopultation, crossover and mutate.).\\
+
+In the Main function, how many cities to travel (n cities = 20), how many population tours to generate per generation (population size = 50), how many generations to evolve through (n generations = 100), and randomly generating cities set (random.seed(100)). Then, it reads the map set by cv.imread(‘map1.jpg’) and takes a picture of a city at random. Since 20 cities were added earlier, I put random.randinit(70,700) in each of x and y and called the function that adds the city so that the cities can be specified where they can be seen through the loop. The role of the Cv2.circle function is to draw a red dot on the set map. Reset the population class with pop and at the same time insert values into the parameters and initialize them. Then, evolve the population and continue looping for 100 generations to draw the best ones through evolvePopulation function and draw a path. Finally, the final distance and the best fit are shown through the print function.
+
+\begin{figure}[h]
+        \centering\textbf{When the cities(red dots) are 20}  
+        \includegraphics[width=1.0\textwidth]{initial.jpg}
+        \caption{\label{fig:reults}20 random red dots on a map}
+\end{figure}
+\newpage
+
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth]{Generation27.jpg}
+    \caption{\label{fig:reults}Random red dots on the map are being optimized when they were in the 27th generation}
+    \includegraphics[width=1.0\textwidth]{LastGeneration.jpg}
+    \caption{\label{fig:reults}Optimizations that appear when a random red dot on the map is the last generation}
+\end{figure}
+\newpage
+
+\begin{figure}[h]
+    \includegraphics[width=1.1\textwidth]{terminalFirst.jpg}
+    \caption{\label{fig:reults}it is showing that the initial distance from the terminal and then the optimized final distance when the genetic algorithm is applied, showing how the dotted lines are connected during the start and end process.\\} 
+    \centering\textbf{When the cities(red dots) are 10}   
+    \includegraphics[width=1.0\textwidth]{initial2.jpg}
+    \caption{\label{fig:reults}10 random red dots on a map}    
+\end{figure}
+\newpage
+
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth]{Generation24.jpg}
+    \caption{\label{fig:reults}Random red dots on the map are being optimized when they were in the 24th generation}
+
+    \includegraphics[width=1.0\textwidth]{LastGeneration2.jpg}
+    \caption{\label{fig:reults}Optimizations that appear when a random red dot on the map is the last generation}
+\end{figure}
+\newpage
+\begin{figure}[h]
+    \includegraphics[width=1.0\textwidth]{terminalSecond.jpg}
+    \caption{\label{fig:reults}it is showing that the initial distance from the terminal and then the optimized final distance when the genetic algorithm is applied, showing how the dotted lines are connected during the start and end process.} 
+\end{figure}
+    
+\section*{Analysis}
+Through a genetic algorithm, the TSP problem was solved by substituting each city in the United States. In addition to the genetic algorithm, many algorithms can be used for TSP, but it was easy to see at a glance because the population was generated from the genetic algorithm. As expected, as we can predict, the higher the genetic variation, the slower the program runs and outputs, but the higher the probability of selecting a solution with a high fit, the higher the probability that the solution with better genes will pass on its genes to the next generation. As it increases, it was found that the next generation of solutions gradually approaches the optimal solution. Genetic mutations increased rapidly as generations passed, so it was not possible to capture the optimized appearance of TSP one by one, but I was able to see the process of mutation through the process of designating and changing random lines at first. However, even though there was a change in generational change due to the proximity of points in later generations, the optimum value was applied, so some generations fell into the local optimum.\\
+
+In the execution result, it can be seen that the initial distance of 20 randomly run cities (red dots) was 4153 km, but after substituting the genetic algorithm, the result value was reduced by almost half to an effective distance of 2054 km. And in the second experiment, a total of 10 random cities were set on the map to see different results, and the initial starting value was 2123 km, but after the algorithm was applied later, the value was 1612 km. Although it was not possible to check detailed changes because the process of changing the lines (class tours) drawn in blue did not occur frequently because the random stamped points did not spread evenly and were concentrated only in certain areas, we were able to find out that genes undergo selection, mating, and mutation processes. Finally, through the result value displayed in the terminal, it is possible to check the start and end of TSP once more along with the order of the optimized blue line connecting the red dots.
+
+\section*{Conclusion}
+In this project, the selection strategy for solving TSP was described and the best solution was derived by comparing performance in terms of solution quality and number of generations. In addition, genetic algorithm is one of the methods to solve the TSP problem, and we learned that many other algorithms can also solve the TSP. Through two tests, the genetic algorithm reduced the effective distance of more than 1000 km and presented a plan to go in an accurate and efficient way. Therefore, this work confirms the concept that genetic algorithms are properly used in the TSP problem.\\
+
+Overall, genetics is known as the meaning of inheritance and evolution of organisms in the natural world. However, it can be seen that it is an optimization method based on the principle of natural selection by engineering modeling of the genetic and evolutionary mechanisms of organisms, and is widely used as a tool for search, optimization, and machine learning. And by simulating the evolution process on a computer, it can be seen that it is a computational model that tries to solve complex real-world problems.\\
+
+If the genetic algorithm is perfectly developed, we can explore various changes in the future and suggest alternatives, and these developed changes will lead us to a better life with medicine, science, and technology.
+
+
+            
+\newpage
+\bibliographystyle{plain}
+\bibliography{mybib}
+\newpage
+\section*{Appendix}
+\subsection*{main.py}
+    \begin{center}
+        \textit{This file processes the input data and prepares it for experimentation.}
+    \end{center}
+
+    \begin{lstlisting}[language=Python]
+import math, random
+import cv2
+# cv2 map drawing package
+
+'''
+class City:
+Means a city and contains the city's coordinates.
+'''
+
+class City:
+    def __init__(self, x=None, y=None):
+        
+        self.x = None  # x coordinate of city
+        self.y = None  # y coordinate of city
+        if x is not None:
+            self.x = x
+        else:
+            self.x = int(random.random() * 200)
+        if y is not None:
+            self.y = y
+        else:
+            self.y = int(random.random() * 200)
+   
+    def getX(self):
+        return self.x
+
+    def getY(self):
+        return self.y
+
+    # method: find distance between cities
+    def distanceTo(self, city): 
+        xDistance = abs(self.getX() - city.getX())
+        yDistance = abs(self.getY() - city.getY())
+        distance = math.sqrt( (xDistance*xDistance) + (yDistance*yDistance) )
+        return distance
+
+    def __repr__(self):
+        return str(self.getX()) + ", " + str(self.getY())
+'''
+class TourManager:
+'''
+
+# The TourManager class helps travelers plan their trips.
+# ㅁAdd city or/ which city exists or/ number of cities
+
+class TourManager:
+    destinationCities = []
+
+    def addCity(self, city):
+        self.destinationCities.append(city)
+
+    def getCity(self, index):
+        return self.destinationCities[index]
+
+    def numberOfCities(self):
+        return len(self.destinationCities)
+
+
+# A class that contains routes connecting all cities, a class that connects cities
+# Means the tour path after all
+
+class Tour:
+    def __init__(self, tourmanager, tour=None):
+        self.tourmanager = tourmanager
+        self.tour = []
+        self.fitness = 0.0
+        self.distance = 0
+        if tour is not None:
+            self.tour = tour
+        else:
+            for i in range(0, self.tourmanager.numberOfCities()):
+                self.tour.append(None)
+
+    def __len__(self):
+        return len(self.tour)
+
+    def __getitem__(self, index):
+        return self.tour[index]
+
+    def __setitem__(self, key, value):
+        self.tour[key] = value
+
+    def __repr__(self):
+        geneString = 'Start -> '
+        for i in range(0, self.tourSize()):
+            geneString += str(self.getCity(i)) + ' -> '
+        geneString += 'End'
+        return geneString
+
+    def generateIndividual(self):
+        for cityIndex in range(0, self.tourmanager.numberOfCities()):
+            self.setCity(cityIndex, self.tourmanager.getCity(cityIndex))
+        random.shuffle(self.tour)
+
+    def getCity(self, tourPosition):
+        return self.tour[tourPosition]
+
+    def setCity(self, tourPosition, city):
+        self.tour[tourPosition] = city
+        self.fitness = 0.0
+        self.distance = 0
+
+    #fitness is inversely proportional to the distance, the shorter the distance, the higher the score
+    def getFitness(self):
+        if self.fitness == 0:
+            self.fitness = 1/float(self.getDistance())
+        return self.fitness
+
+    # Function to calculate the total distance of the tour
+    def getDistance(self):
+        if self.distance == 0:
+            tourDistance = 0
+            for cityIndex in range(0, self.tourSize()):
+                fromCity = self.getCity(cityIndex)
+                destinationCity = None
+                if cityIndex+1 < self.tourSize():
+                    destinationCity = self.getCity(cityIndex+1)
+                else:
+                    destinationCity = self.getCity(0)
+                tourDistance += fromCity.distanceTo(destinationCity)
+            self.distance = tourDistance
+        return self.distance
+
+    def tourSize(self):
+        return len(self.tour)
+
+    def containsCity(self, city):
+        return city in self.tour
+
+# Means a set of travel routes, a collection of tours
+# Create a better population by mutating, crossover, and reviving those with high fitness
+class Population:
+    def __init__(self, tourmanager, populationSize, initialise):
+        self.tours = []
+        for i in range(0, populationSize):
+            self.tours.append(None)
+        
+        if initialise:
+            for i in range(0, populationSize):
+                newTour = Tour(tourmanager)
+                newTour.generateIndividual()
+                self.saveTour(i, newTour)
+        
+    def __setitem__(self, key, value):
+        self.tours[key] = value
+
+    def __getitem__(self, index):
+        return self.tours[index]
+
+    def saveTour(self, index, tour):
+        self.tours[index] = tour
+
+    def getTour(self, index):
+        return self.tours[index]
+
+    def getFittest(self):
+        fittest = self.tours[0]
+        for i in range(0, self.populationSize()):
+            if fittest.getFitness() <= self.getTour(i).getFitness():
+                fittest = self.getTour(i)
+        return fittest
+
+    def populationSize(self):
+        return len(self.tours)
+
+
+#Core genetic algorithm class
+
+class GA:
+    def __init__(self, tourmanager, mutationRate=0.05, tournamentSize=5, elitism=True):
+        self.tourmanager = tourmanager
+        self.mutationRate = mutationRate
+        self.tournamentSize = tournamentSize
+        self.elitism = elitism
+    #Evolving process
+    def evolvePopulation(self, pop):
+        newPopulation = Population(self.tourmanager, pop.populationSize(), False)
+        elitismOffset = 0
+        if self.elitism:
+            newPopulation.saveTour(0, pop.getFittest())
+            elitismOffset = 1
+        
+        for i in range(elitismOffset, newPopulation.populationSize()):
+            parent1 = self.tournamentSelection(pop)
+            parent2 = self.tournamentSelection(pop)
+            child = self.crossover(parent1, parent2)
+            newPopulation.saveTour(i, child)
+        
+        for i in range(elitismOffset, newPopulation.populationSize()):
+            self.mutate(newPopulation.getTour(i))
+        
+        return newPopulation
+    # performance process
+    def crossover(self, parent1, parent2):
+        child = Tour(self.tourmanager)
+        
+        startPos = int(random.random() * parent1.tourSize())
+        endPos = int(random.random() * parent1.tourSize())
+        
+        for i in range(0, child.tourSize()):
+            if startPos < endPos and i > startPos and i < endPos:
+                child.setCity(i, parent1.getCity(i))
+            elif startPos > endPos:
+                if not (i < startPos and i > endPos):
+                    child.setCity(i, parent1.getCity(i))
+        
+        for i in range(0, parent2.tourSize()):
+            if not child.containsCity(parent2.getCity(i)):
+                for ii in range(0, child.tourSize()):
+                    if child.getCity(ii) == None:
+                        child.setCity(ii, parent2.getCity(i))
+                        break
+
+        return child
+   # Mutation process
+    def mutate(self, tour):
+        for tourPos1 in range(0, tour.tourSize()):
+            if random.random() < self.mutationRate:
+                tourPos2 = int(tour.tourSize() * random.random())
+                
+                city1 = tour.getCity(tourPos1)
+                city2 = tour.getCity(tourPos2)
+                
+                tour.setCity(tourPos2, city1)
+                tour.setCity(tourPos1, city2)
+
+    def tournamentSelection(self, pop):
+        tournament = Population(self.tourmanager, self.tournamentSize, False)
+        for i in range(0, self.tournamentSize):
+            randomId = int(random.random() * pop.populationSize())
+            tournament.saveTour(i, pop.getTour(randomId))
+        fittest = tournament.getFittest()
+        return fittest
+
+
+
+if __name__ == '__main__':
+    # How many cities will traveler take a trip to?
+    n_cities = 20
+    # How many populations (tours) to create per generation
+    population_size = 50
+    # Evolution through 100 generations
+    n_generations = 100
+    # To generate random cities
+    random.seed(100)
+
+    # map1.jpg (U.S. map)  plan to take a random city
+    map_original = cv2.imread('map1.jpg')
+
+    # Setup cities and tour
+    tourmanager = TourManager()
+    # Add 20 n_cities
+    for i in range(n_cities):
+        # Cities should not be created anywhere, so put the coordinates in x and y respectively
+        x = random.randint(70, 700)        # 70 700
+        y = random.randint(70, 700)        # 70 700
+        # Add cities
+        tourmanager.addCity(City(x=x, y=y))
+
+        # Draw a red dot on the image
+        cv2.circle(map_original, center=(x, y), radius=10, color=(0, 0, 255), thickness=-1, lineType=cv2.LINE_AA)
+
+    cv2.imshow('map1', map_original)
+    cv2.waitKey(0)
+
+    # Initialize population
+    pop = Population(tourmanager, populationSize=population_size, initialise=True)
+    print("Initial distance: " + str(pop.getFittest().getDistance()))
+
+    # Evolve population
+    ga = GA(tourmanager)
+
+    # loop 100 generations
+    for i in range(n_generations):
+        pop = ga.evolvePopulation(pop)
+        # pick the best ones
+        fittest = pop.getFittest()
+
+        map_result = map_original.copy()
+        # draw the path# draw the path# draw the path
+        for j in range(1, n_cities):
+            cv2.line(
+                map_result,
+                pt1=(fittest[j-1].x, fittest[j-1].y),
+                pt2=(fittest[j].x, fittest[j].y),
+                color=(255, 0, 0),
+                thickness=3,
+                lineType=cv2.LINE_AA
+            )
+
+        cv2.putText(map_result, org=(10, 25), text='Generation: %d' % (i+1), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=0, thickness=1, lineType=cv2.LINE_AA)
+        cv2.putText(map_result, org=(10, 50), text='Distance: %.2fkm' % fittest.getDistance(), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.7, color=0, thickness=1, lineType=cv2.LINE_AA)
+        cv2.imshow('map1', map_result)
+        if cv2.waitKey(100) == ord('q'):
+            break
+
+    # Print final results
+    print("Finished")
+    print("Final distance: " + str(pop.getFittest().getDistance()))
+    print("Solution:")
+    print(pop.getFittest())
+
+    cv2.waitKey(0)
+    \end{lstlisting}
+
+
+\end{document}
